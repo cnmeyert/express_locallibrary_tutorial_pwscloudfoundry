@@ -11,14 +11,17 @@ var catalogRouter = require("./routes/catalog"); // import routes for "Catalog" 
 var compression = require('compression');
 var helmet = require('helmet');
 
+var cfenv = require("cfenv");
+
 var app = express();
 
 app.use(helmet());
+var appEnv = cfenv.getAppEnv();
 
 // setup Mongoose connection
 var mongoose = require('mongoose');
 var dev_db_url = 'mongodb+srv://cnmeyert:uyP7VTQ7a9799MyX@clustercme-h4uu4.mongodb.net/local_library?retryWrites=true';
-var mongoDB = process.env.MONGODB_URI || dev_db_url;
+var mongoDB = appEnv.getServiceURL('node-express-tutorial-mongodb') || dev_db_url;
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
